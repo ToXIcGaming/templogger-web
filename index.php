@@ -31,27 +31,45 @@
 			vertical-align: top;
 			padding-right: 40px;
 		}
+		
+		#cpu {
+			padding-top: 10px;
+			position: relative;
+			display: block;
+		}
     </style>
 	<script>
-            $(document).ready(function() {
-                $("#buttonon").click(function() {
-                    $.post("./api.php", {
-                            buttonon: ""
-                        },
-                        function(data, status) {
+    $(document).ready(function() {
+				
+		var jsonData = $.ajax({
+		url: './api.php?t=cpu_stats',
+		dataType: "json",
+		async: false,
+		success: function (data) {
 
-                        });
+		$('#cpu').append("CPU Temp: " + data.cpu_temp + "°C - Uptime: " + data.uptime + "");
+		
+		}
+		});
+				
+        $("#buttonon").click(function() {
+            $.post("./api.php", {
+                    buttonon: ""
+                },
+                function(data, status) {
+
                 });
+        });
 
-                $("#buttonoff").click(function() {
-                    $.post("./api.php", {
-                            buttonoff: ""
-                        },
-                        function(data, status) {
+        $("#buttonoff").click(function() {
+            $.post("./api.php", {
+                    buttonoff: ""
+                },
+                function(data, status) {
 
-                        });
                 });
-            });
+        });
+    });
         </script>
 </head>
 
@@ -71,6 +89,7 @@
 					<li><a href="?type=list">List</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+					<li id="cpu"></li>
 				    <!--<li><a id="buttonon" href="">Turn on display</a></li>
                     <li><a id="buttonoff" href="">Turn off display</a></li>-->
                     <!--<li class="dropdown">
@@ -91,9 +110,7 @@
 <?php
 if (isset($_GET['type'])) {
 if($_GET['type'] == 'list') { 
-
 ?>
-
         <script>
             $(document).ready(function() {
                 $('#example').dataTable({
@@ -137,10 +154,8 @@ if($_GET['type'] == 'list') {
 }
 } else { ?>
 	
-   <script type="text/javascript" src="includes/js/loader.js"></script>
-	
+	<script type="text/javascript" src="includes/js/loader.js"></script>
 	<script>
-	
 	$( document ).ready(function() {
 
 		var jsonData = $.ajax({
@@ -207,7 +222,6 @@ if($_GET['type'] == 'list') {
 				google.charts.setOnLoadCallback(drawChart);
 			});
 			
-			
 		}
 		});
 		
@@ -215,7 +229,6 @@ if($_GET['type'] == 'list') {
 	</script>
 	
 	<div id="cont"></div>
-	
 	
 <?php } ?>
     <div id="bottompadding"></div>

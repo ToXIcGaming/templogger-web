@@ -118,8 +118,8 @@ mysqli_close ($con);
 	
 } elseif  ($type == 'cpu_stats') {
 	
-$cputemp = shell_exec("/home/pi/temp");
-$uptime = shell_exec("uptime");
+$cputemp = substr(shell_exec("/home/pi/temp"), 0, -1);
+$uptime = substr(substr(shell_exec("uptime -p"), 3), 0, -1);
 
 $cpuStats = array(
 				'cpu_temp' => $cputemp,
