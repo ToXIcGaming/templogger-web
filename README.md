@@ -13,4 +13,4 @@ temp=`cat /sys/class/thermal/thermal_zone0/temp`
 echo "$(($temp/1000))"
 ```
 
-saved as a file named temp with no extension in the pi home directory
+saved as a file named temp with no extension in the pi home directory and `chmod +x temp`
