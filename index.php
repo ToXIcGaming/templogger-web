@@ -172,6 +172,8 @@ if($_GET['type'] == 'list') {
 				$('#cont').append('<div id="chart' + obj.sensor + '" style="width: 100%;"></div><br>');
 				
 				$('#stats' + obj.sensor + '').append("<h2>" + obj.sensor + " Stats</h2>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Temperature: " + obj.latest_temperature + "°C</p>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Humidity: " + obj.latest_humidity + "%</p><br>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Average Temperature: " + obj.avg_temperature + "°C</p>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Average Humidity: " + obj.avg_humidity + "%</p><br>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Highest Recorded Temperature: " + obj.max_temperature + "°C</p>");
@@ -184,7 +186,7 @@ if($_GET['type'] == 'list') {
 			
 					// JSONP request
 					var jsonData = $.ajax({
-					url: './api.php?t=lt_temps&sens=' + obj.sensor + '',
+					url: './api.php?t=lt_temps&sens=' + obj.sensor + '&hours=48',
 					dataType: "json",
 					async: false
 					}).done(function (results) {
@@ -211,7 +213,7 @@ if($_GET['type'] == 'list') {
 						colors: ['#ff0000', '#0000cc'],
 						//lineWidth: 5,
 						chartArea: {  width: "75%" },
-						title: '' + obj.sensor + ''
+						title: '' + obj.sensor + ' - Last 48 Hours'
 					});
 			
 					});

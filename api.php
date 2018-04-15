@@ -1,4 +1,10 @@
 <?php
+error_reporting( E_ALL );
+ini_set( 'display_errors', 1 );
+ini_set( 'html_errors', 'On' );
+
+header('Content-Type: application/json');
+header("Cache-Control: max-age=300"); // Cache API for 5 minutes
 // settings
 // host, user and password settings
 $host = "localhost";
@@ -28,12 +34,24 @@ $type = $_GET['t'];
 
 if ($type == 'lt_temps') {
 
+$sql = "SELECT * FROM temperaturedata";
+
 if (isset($_GET['sens'])) {
-	$sql="SELECT * FROM temperaturedata WHERE sensor LIKE '%{$_GET['sens']}%'";
+	$sql .= " WHERE sensor LIKE '%{$_GET['sens']}%'";
 } else {
+	//$sql = "SELECT * FROM temperaturedata";
+}
 
-	$sql="SELECT * FROM temperaturedata";
+if (isset($_GET['hours'])) {
+	$hours = $_GET['hours'];
+	$sql .= " WHERE dateandtime >= (NOW() - INTERVAL $hours HOUR)";
+} else {
+}
 
+if (isset($_GET['hours']) & isset($_GET['sens'])) {
+	$hours = $_GET['hours'];
+	$sql = "SELECT * FROM temperaturedata WHERE sensor LIKE '%{$_GET['sens']}%' AND dateandtime >= (NOW() - INTERVAL $hours HOUR)";
+} else {
 }
 
 //$sql="SELECT * FROM temperaturedata ORDER BY dateandtime DESC";
@@ -48,7 +66,6 @@ if (!$temperatures) {
     printf("Error: %s\n", mysqli_error($con));
     exit();
 }
-
         // loop all the results that were read from database and "draw" to web page
         while($temperature=mysqli_fetch_assoc($temperatures)){
 			$temp =	$temperature['temperature'];
@@ -107,11 +124,23 @@ while($row = mysqli_fetch_array($stats)){
 				'first_datetime' => $fir['dateandtime'],
 				);
 	}
-    
-	$result = array_merge($statsAR, $first);
+
+	$sqllast="select * from temperaturedata WHERE sensor LIKE '%{$row['sensor']}%' order by dateandtime desc limit 1";
+	
+	$last = mysqli_query($con, $sqllast);
+	
+	while($las=mysqli_fetch_assoc($last)){
+				$lasts = array(
+				'latest_datetime' => $las['dateandtime'],
+				'latest_temperature' => $las['temperature'],
+				'latest_humidity' => $las['humidity']
+				);
+	}
+	
+	$result = array_merge($statsAR, $first, $lasts);
 	array_push($masterA, $result);
 }
-
+				
 echo json_encode($masterA);
 	
 mysqli_close ($con);
