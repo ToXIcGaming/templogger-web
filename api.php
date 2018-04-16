@@ -5,7 +5,7 @@ ini_set( 'html_errors', 'On' );
 
 header('Content-Type: application/json');
 header("Cache-Control: max-age=300"); // Cache API for 5 minutes
-// settings
+
 // host, user and password settings
 $host = "localhost";
 $user = "";
@@ -25,7 +25,6 @@ $database = "temperatures";
 //	//header('Location: index.php');
 //}
 
-// make connection to database
 $con = mysqli_connect($host,$user,$password,$database);
 
 if(isset($_GET['t'])) {
@@ -39,7 +38,7 @@ $sql = "SELECT * FROM temperaturedata";
 if (isset($_GET['sens'])) {
 	$sql .= " WHERE sensor LIKE '%{$_GET['sens']}%'";
 } else {
-	//$sql = "SELECT * FROM temperaturedata";
+
 }
 
 if (isset($_GET['hours'])) {
@@ -59,32 +58,21 @@ if (isset($_GET['hours']) & isset($_GET['sens'])) {
 //NOTE: If you want to show all entries from current date in web page uncomment line below by removing //
 //$sql="select * from temperaturedata where date(dateandtime) = curdate();";
 
-// set query to variable
 $temperatures = mysqli_query($con, $sql);
 
 if (!$temperatures) {
     printf("Error: %s\n", mysqli_error($con));
     exit();
 }
-        // loop all the results that were read from database and "draw" to web page
-        while($temperature=mysqli_fetch_assoc($temperatures)){
-			$temp =	$temperature['temperature'];
-			$humidity = $temperature['humidity'];
-//			if ($_GET['dt'] == "uk") {
-//			$date = explode(" ", $temperature['dateandtime'])[0];
-//			$time = strstr($temperature['dateandtime'], ' ');	
-//			$datetime = date("d-m-Y", strtotime($date))." ".$time;
-//			} else {
-				$datetime = $temperature['dateandtime'];
-//			}
-			$results[] = array(
-			'datetime' => $datetime,
-			'sensor' => $temperature['sensor'],
-			'temperature' => $temp,
-			'humidity' => $humidity
-			);
 
-        }
+while($temperature=mysqli_fetch_assoc($temperatures)){
+	$results[] = array(
+	'datetime' => $temperature['dateandtime'],
+	'sensor' => $temperature['sensor'],
+	'temperature' => $temperature['temperature'],
+	'humidity' => $temperature['humidity']
+	);
+}
 
 echo json_encode($results);
 		
@@ -130,11 +118,11 @@ while($row = mysqli_fetch_array($stats)){
 	$last = mysqli_query($con, $sqllast);
 	
 	while($las=mysqli_fetch_assoc($last)){
-				$lasts = array(
-				'latest_datetime' => $las['dateandtime'],
-				'latest_temperature' => $las['temperature'],
-				'latest_humidity' => $las['humidity']
-				);
+		$lasts = array(
+		'latest_datetime' => $las['dateandtime'],
+		'latest_temperature' => $las['temperature'],
+		'latest_humidity' => $las['humidity']
+		);
 	}
 	
 	$result = array_merge($statsAR, $first, $lasts);

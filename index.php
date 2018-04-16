@@ -44,7 +44,6 @@
 		var jsonData = $.ajax({
 		url: './api.php?t=cpu_stats',
 		dataType: "json",
-		async: false,
 		success: function (data) {
 
 		$('#cpu').append("CPU Temp: " + data.cpu_temp + "°C - Uptime: " + data.uptime + "");
@@ -161,16 +160,14 @@ if($_GET['type'] == 'list') {
 		var jsonData = $.ajax({
 		url: './api.php?t=stats',
 		dataType: "json",
-		async: false,
 		success: function (data) {
 			$.each(data,function(index,obj)
 			{
-				//alert("Name: "+obj.sensor+"\n"+"Age:"+obj.avg_temperature+"\n"+"Location: "+obj.avg_humidity+"\n");
-				//$('#statsIn').append("<p>Average Temperature: " + data.avg_Indoor_temperature + "°C</p>");
+				firDate = new Date(obj.first_datetime);
+				latestDate = new Date(obj.latest_datetime);
 				
 				$('#cont').append('<div align="center" id="stats' + obj.sensor + '"></div>');
 				$('#cont').append('<div id="chart' + obj.sensor + '" style="width: 100%;"></div><br>');
-				
 				$('#stats' + obj.sensor + '').append("<h2>" + obj.sensor + " Stats</h2>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Temperature: " + obj.latest_temperature + "°C</p>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Humidity: " + obj.latest_humidity + "%</p><br>");
@@ -180,7 +177,8 @@ if($_GET['type'] == 'list') {
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Highest Recorded Humidity: " + obj.max_humidity + "%</p><br>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Lowest Recorded Temperature: " + obj.min_temperature + "°C</p>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Lowest Recorded Humidity: " + obj.min_humidity + "%</p><br>");
-				$('#stats' + obj.sensor + '').append("<p id='lineup'>Started Recording: " + obj.first_datetime + "</p>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Started Recording: " + firDate.toUTCString() + "</p>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Recording: " + latestDate.toUTCString() + "</p>");
 				
 				function drawChart() {
 			
@@ -188,7 +186,6 @@ if($_GET['type'] == 'list') {
 					var jsonData = $.ajax({
 					url: './api.php?t=lt_temps&sens=' + obj.sensor + '&hours=48',
 					dataType: "json",
-					async: false
 					}).done(function (results) {
 			
 					var data = new google.visualization.DataTable();
