@@ -162,10 +162,7 @@ if($_GET['type'] == 'list') {
 		dataType: "json",
 		success: function (data) {
 			$.each(data,function(index,obj)
-			{
-				firDate = new Date(obj.first_datetime);
-				latestDate = new Date(obj.latest_datetime);
-				
+			{				
 				$('#cont').append('<div align="center" id="stats' + obj.sensor + '"></div>');
 				$('#cont').append('<div id="chart' + obj.sensor + '" style="width: 100%;"></div><br>');
 				$('#stats' + obj.sensor + '').append("<h2>" + obj.sensor + " Stats</h2>");
@@ -177,8 +174,8 @@ if($_GET['type'] == 'list') {
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Highest Recorded Temperature: " + obj.max_temperature + "°C</p><br>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Lowest Recorded Humidity: " + obj.min_humidity + "%</p>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Highest Recorded Humidity: " + obj.max_humidity + "%</p><br>");
-				$('#stats' + obj.sensor + '').append("<p id='lineup'>Started Recording: " + firDate.toUTCString() + "</p>");
-				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Recording: " + latestDate.toUTCString() + "</p>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Started Recording: " + obj.first_datetime + "</p>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Recording: " + obj.latest_datetime + "</p>");
 				
 				function drawChart() {
 			
