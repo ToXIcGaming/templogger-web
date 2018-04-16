@@ -173,10 +173,10 @@ if($_GET['type'] == 'list') {
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Humidity: " + obj.latest_humidity + "%</p><br>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Average Temperature: " + obj.avg_temperature + "°C</p>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Average Humidity: " + obj.avg_humidity + "%</p><br>");
-				$('#stats' + obj.sensor + '').append("<p id='lineup'>Highest Recorded Temperature: " + obj.max_temperature + "°C</p>");
-				$('#stats' + obj.sensor + '').append("<p id='lineup'>Highest Recorded Humidity: " + obj.max_humidity + "%</p><br>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Lowest Recorded Temperature: " + obj.min_temperature + "°C</p>");
-				$('#stats' + obj.sensor + '').append("<p id='lineup'>Lowest Recorded Humidity: " + obj.min_humidity + "%</p><br>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Highest Recorded Temperature: " + obj.max_temperature + "°C</p><br>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Lowest Recorded Humidity: " + obj.min_humidity + "%</p>");
+				$('#stats' + obj.sensor + '').append("<p id='lineup'>Highest Recorded Humidity: " + obj.max_humidity + "%</p><br>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Started Recording: " + firDate.toUTCString() + "</p>");
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Recording: " + latestDate.toUTCString() + "</p>");
 				
