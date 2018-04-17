@@ -38,38 +38,6 @@
 			display: block;
 		}
     </style>
-	<script>
-    $(document).ready(function() {
-				
-		var jsonData = $.ajax({
-		url: './api.php?t=cpu_stats',
-		dataType: "json",
-		success: function (data) {
-
-		$('#cpu').append("CPU Temp: " + data.cpu_temp + "°C - Uptime: " + data.uptime + "");
-		
-		}
-		});
-				
-        $("#buttonon").click(function() {
-            $.post("./api.php", {
-                    buttonon: ""
-                },
-                function(data, status) {
-
-                });
-        });
-
-        $("#buttonoff").click(function() {
-            $.post("./api.php", {
-                    buttonoff: ""
-                },
-                function(data, status) {
-
-                });
-        });
-    });
-        </script>
 </head>
 
 <body>
@@ -88,9 +56,6 @@
 					<li><a href="?type=list">List</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-					<li id="cpu"></li>
-				    <!--<li><a id="buttonon" href="">Turn on display</a></li>
-                    <li><a id="buttonoff" href="">Turn off display</a></li>-->
                     <!--<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome back</a>                    
 						<ul class="dropdown-menu">
@@ -115,7 +80,7 @@ if($_GET['type'] == 'list') {
                 $('#example').dataTable({
 					ordering:  true,
                     "ajax": {
-                        "url": './api.php?t=lt_temps',
+                        "url": './api.php?c=display&t=list',
                         "dataSrc": "",
                     },
                     "order": [
@@ -158,11 +123,11 @@ if($_GET['type'] == 'list') {
 	$( document ).ready(function() {
 
 		var jsonData = $.ajax({
-		url: './api.php?t=stats',
+		url: './api.php?c=display&t=stats',
 		dataType: "json",
 		success: function (data) {
 			$.each(data,function(index,obj)
-			{				
+			{
 				$('#cont').append('<div align="center" id="stats' + obj.sensor + '"></div>');
 				$('#cont').append('<div id="chart' + obj.sensor + '" style="width: 100%;"></div><br>');
 				$('#stats' + obj.sensor + '').append("<h2>" + obj.sensor + " Stats</h2>");
@@ -178,10 +143,9 @@ if($_GET['type'] == 'list') {
 				$('#stats' + obj.sensor + '').append("<p id='lineup'>Latest Recording: " + obj.latest_datetime + "</p>");
 				
 				function drawChart() {
-			
-					// JSONP request
+					
 					var jsonData = $.ajax({
-					url: './api.php?t=lt_temps&sens=' + obj.sensor + '&hours=48',
+					url: './api.php?c=display&t=list&sens=' + obj.sensor + '&hours=48',
 					dataType: "json",
 					}).done(function (results) {
 			

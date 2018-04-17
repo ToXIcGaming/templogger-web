@@ -11,27 +11,47 @@ $host = "localhost";
 $user = "";
 $password = "";
 $database = "temperatures";
-
-//if (isset($_POST['buttonoff']))
-//{
-//	shell_exec('sudo pkill -f clock.py');
-//	shell_exec('sudo python3 /home/pi/scripts/clear_oled.py > /dev/null 2>&1 &');	
-//	//header('Location: index.php');
-//	}
-//
-//if (isset($_POST['buttonon']))
-//{
-//	shell_exec('sudo python /home/pi/scripts/clock.py > /dev/null 2>&1 &');
-//	//header('Location: index.php');
-//}
+$APIpass = "";
 
 $con = mysqli_connect($host,$user,$password,$database);
 
+if(isset($_GET['c'])) {
+if ($_GET['c'] == 'add') {
+
+if(isset($_GET['pass']) && $_GET['pass'] == $APIpass) {
+
+if (isset($_GET['dt']) && isset($_GET['sens']) && isset($_GET['temp']) && isset($_GET['hum'])) {
+
+$_GET['dt'] = mysqli_real_escape_string($con, $_GET['dt']);
+$_GET['sens'] = mysqli_real_escape_string($con, $_GET['sens']);
+$_GET['temp'] = mysqli_real_escape_string($con, $_GET['temp']);
+$_GET['hum'] = mysqli_real_escape_string($con, $_GET['hum']);
+
+$sql="INSERT INTO temperaturedata (dateandtime, sensor, temperature, humidity) 
+VALUES ('{$_GET['dt']}', '{$_GET['sens']}', '{$_GET['temp']}', '{$_GET['hum']}')";
+
+$stats = mysqli_query($con, $sql);
+
+if ($stats === TRUE) {
+    echo "New record created successfully";
+} else {
+    
+}
+
+mysqli_close ($con);
+
+} else {
+	echo 'Invalid parameters';
+}
+
+} else {
+	echo 'Invalid Pass';
+}
+
+} elseif  ($_GET['c'] == 'display') {
+
 if(isset($_GET['t'])) {
-
-$type = $_GET['t'];
-
-if ($type == 'lt_temps') {
+if ($_GET['t'] == 'list') {
 
 $sql = "SELECT * FROM temperaturedata";
 
@@ -78,7 +98,7 @@ echo json_encode($results);
 		
 mysqli_close ($con);
 
-} elseif  ($type == 'stats') {
+} elseif  ($_GET['t'] == 'stats') {
 
 $sql="SELECT sensor, COUNT(id) FROM temperaturedata GROUP BY sensor;";
 
@@ -133,24 +153,20 @@ echo json_encode($masterA);
 	
 mysqli_close ($con);
 	
-} elseif  ($type == 'cpu_stats') {
-	
-$cputemp = substr(shell_exec("/home/pi/temp"), 0, -1);
-$uptime = substr(substr(shell_exec("uptime -p"), 3), 0, -1);
-
-$cpuStats = array(
-				'cpu_temp' => $cputemp,
-				'uptime' => $uptime
-				);
-
-echo json_encode($cpuStats);
-	
 } else {
 	echo 'Invalid type specified';
 }
 
 } else {
 	echo 'No type specified';
+}
+
+} else {
+	echo 'Invalid command specified';
+}
+
+} else {
+	echo 'No command specified';
 }
 
 ?>
